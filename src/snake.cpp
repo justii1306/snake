@@ -15,13 +15,7 @@
 
 CSnake::CSnake(CRect r, char _c /*=' '*/):
   CFramedWindow(r, _c){
-	body.push_back(CPoint(3, 1));
-	body.push_back(CPoint(2, 1));
-	body.push_back(CPoint(1, 1));
-	status = MENU;
-	DIR_RIGHT
-	spawnFood();
-	level = 1;
+	reset();
 }
 
 void CSnake::paint(){
@@ -57,8 +51,6 @@ void CSnake::paint(){
 		}
 	} else if(status == PAUSE){
 		CFramedWindow::paint();
-		printSnake();
-		printFood();
 		gotoyx(geom.topleft.y + 6, geom.topleft.x + 2);
 		printl("PAUSED");
 		gotoyx(geom.topleft.y + 10, geom.topleft.x + 2);
@@ -74,7 +66,7 @@ void CSnake::paint(){
 		gotoyx(geom.topleft.y + 6, geom.topleft.x + 2);
 		printl("GAME OVER");
 		gotoyx(geom.topleft.y + 8, geom.topleft.x + 2);
-		printl("LEVEL: %d", level);
+		printl("SCORE: %d", level);
 		gotoyx(geom.topleft.y + 10, geom.topleft.x + 2);
 		printl("Press r to exit to menu...");
 	}
@@ -110,7 +102,6 @@ bool CSnake::handleEvent(int key){
 		}
 		if(key == 'r'){
 			reset();
-			
 		} else if(key == 'p'){
 			if(status == MENU || status == PAUSE){
 				status = GAME;
@@ -158,6 +149,7 @@ void CSnake::detectFood(){
 
 void CSnake::spawnFood(){
 	srand(time(NULL));
+	//losujemy pozycję jedzenia, upewniając się, że będzie znajdywało się w obszarze gry
 	food_position.x = rand()%(geom.size.x - 2) + 1;
 	food_position.y = rand()%(geom.size.y - 2) + 1;
 	unsigned int i = 0;
@@ -240,4 +232,3 @@ void CSnake::reset(){
 	spawnFood();
 	level = 1;
 }
-
